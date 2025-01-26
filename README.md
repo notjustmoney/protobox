@@ -1,4 +1,10 @@
 # Protobox
+![GitHub release](https://img.shields.io/github/release/notjustmoney/protobox.svg)
+![Go Report Card](https://goreportcard.com/badge/github.com/notjustmoney/protobox)
+![GoDoc](https://godoc.org/github.com/notjustmoney/protobox?status.svg)
+[![Codecov](https://codecov.io/gh/notjustmoney/protobox/branch/main/graph/badge.svg)](https://codecov.io/gh/notjustmoney/protobox)
+
+
 > For reliable delivery of In-process or Interprocess messages.
 
 Protobox is a reliable message delivery framework for Go, providing both in-process and network message delivery capabilities with type safety and transaction support.
@@ -77,3 +83,7 @@ Issues, PRs for design suggestion, contributing are welcome.
 
 # License
 This project is licensed under the Apache License 2.0 - see the LICENSE file for details.
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=notjustmoney/protobox&type=Date)](https://star-history.com/#notjustmoney/protobox&Date)
