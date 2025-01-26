@@ -1,0 +1,11 @@
+{{define "protobox_events"}}{{- /*gotype: github.com/notjustmoney/protobox/internal/proto/generator/source.ProtoboxParams*/ -}}
+{{ range .Events }}
+    func (x *{{ .Name }}) Topic() string {
+    return "{{ .Topic }}"
+    }
+
+    func (x *{{ .Name }}) Version() string {
+    return "{{ .Version }}"
+    }
+{{ end }}
+{{ end }}

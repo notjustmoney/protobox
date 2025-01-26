@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package protobox;
+
+import "google/protobuf/descriptor.proto";
+import "protobox/dispatcher.proto";
+import "protobox/event.proto";
+
+option go_package = "github.com/notjustmoney/protobox/gen/proto/protobox;protoboxpb";
+
+extend google.protobuf.MessageOptions {
+  optional Event event = 50001;
+  optional Dispatcher dispatcher = 50002;
+}

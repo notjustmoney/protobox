@@ -1,0 +1,112 @@
+{{define "protobox_dispatcher"}}{{- /*gotype: github.com/notjustmoney/protobox/internal/proto/generator/source.ProtoboxParams*/ -}}
+{{range .Dispatchers}}
+type {{.Name}}Option interface {
+    apply(*{{.Name}}Config)
+}
+
+type {{.Name}}OptionFunc func(*{{.Name}}Config)
+
+func (f {{.Name}}OptionFunc) apply(cfg *{{.Name}}Config) {
+    f(cfg)
+}
+
+type {{.Name}}Config struct {
+    {{- range .Messages }}
+    {{ . | lower }}handlers []protobox.EventHandler[*{{ . }}]
+    {{- end }}
+}
+
+{{$dispatcher := .}}
+{{range .Messages}}
+func With{{.}}EventHandler(handlers ...protobox.EventHandler[*{{.}}]) {{$dispatcher.Name}}Option {
+    return {{$dispatcher.Name}}OptionFunc(func(cfg *{{$dispatcher.Name}}Config) {
+        cfg.{{. | lower}}handlers = append(cfg.{{. | lower}}handlers, handlers...)
+    })
+}
+{{end}}
+
+{{if .Sequential}}
+type Sequential{{ .Name }} struct {
+    cfg *{{ .Name }}Config
+}
+
+func NewSequential{{ .Name }}(opts ...{{ .Name }}Option) *Sequential{{ .Name }} {
+    cfg := new({{ .Name }}Config)
+    for _, opt := range opts {
+        opt.apply(cfg)
+    }
+    return &Sequential{{ .Name }}{
+        cfg: cfg,
+    }
+}
+
+func (d *Sequential{{ .Name }}) Dispatch(ctx context.Context, message proto.Message) error {
+    if message == nil {
+        return nil
+    }
+    switch m := message.(type) {
+    {{- range .Messages }}
+    case *{{ . }}:
+        for _, handler := range d.cfg.{{ . | lower }}handlers {
+            if len(d.cfg.{{ . | lower }}handlers) == 0 {
+                return nil
+            }
+            if err := handler.Handle(ctx, m); err != nil {
+                return err
+            }
+        }
+        return nil
+    {{- end }}
+    default:
+        return nil
+    }
+}
+{{end}}
+
+{{if .Parallel}}
+type Parallel{{ .Name }} struct {
+    cfg *{{ .Name }}Config
+}
+
+func NewParallel{{ .Name }}(opts ...{{ .Name }}Option) *Parallel{{ .Name }} {
+    cfg := new({{ .Name }}Config)
+    for _, opt := range opts {
+        opt.apply(cfg)
+    }
+    return &Parallel{{ .Name }}{
+        cfg: cfg,
+    }
+}
+
+func (d *Parallel{{ .Name }}) Dispatch(ctx context.Context, message proto.Message) error {
+    if message == nil {
+        return nil
+    }
+    switch m := message.(type) {
+    {{- range .Messages }}
+    case *{{ . }}:
+    if len(d.cfg.{{ . | lower }}handlers) == 0 {
+        return nil
+    }
+    // if there is one handler per event type, we can call it directly
+    if len(d.cfg.{{ . | lower }}handlers) == 1 {
+        return d.cfg.{{ . | lower }}handlers[0].Handle(ctx, m)
+    }
+    // if there are multiple handlers per event type, we can call them in parallel
+    g, gCtx := errgroup.WithContext(ctx)
+    for _, handler := range d.cfg.{{ . | lower }}handlers {
+        h := handler // capture handler variable
+        g.Go(func() error {
+            return h.Handle(gCtx, m)
+        })
+    }
+    return g.Wait()
+    {{- end }}
+    default:
+        return nil
+    }
+}
+{{end}}
+
+{{end}}
+{{end}}

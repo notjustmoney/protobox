@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package protobox;
+
+option go_package = "github.com/notjustmoney/protobox/gen/proto/protobox;protoboxpb";
+
+message Dispatcher {
+  bool sequential = 1;
+  bool parallel = 2;
+}

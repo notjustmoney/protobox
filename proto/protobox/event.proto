@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package protobox;
+
+option go_package = "github.com/notjustmoney/protobox/gen/proto/protobox;protoboxpb";
+
+message Event {
+  string topic = 1;
+  string version = 2;
+  bool deprecated = 3;
+}
