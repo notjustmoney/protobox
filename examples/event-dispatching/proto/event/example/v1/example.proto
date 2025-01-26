@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package event.example.v1;
+
+option go_package = "github.com/notjustmoney/event-dispatching/examples/event-dispatching/proto/event/example/v1;exampleeventv1";
+
+import "google/protobuf/timestamp.proto";
+import "protobox/options.proto";
+
+message EventDispatcher {
+  option(protobox.dispatcher) = {
+    sequential: true
+    parallel: false
+  };
+}
+
+message ExampleCreated {
+  option(protobox.event) = {
+    topic: "protobox.example.created"
+    version: "v1"
+  };
+
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  google.protobuf.Timestamp created_at = 4;
+}
+
+message ExampleDeleted {
+  option(protobox.event) = {
+    topic: "protobox.example.deleted"
+    version: "v1"
+  };
+
+  string id = 1;
+}

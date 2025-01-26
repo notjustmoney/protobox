@@ -1,0 +1,17 @@
+version: v2
+clean: true
+managed:
+  enabled: true
+inputs:
+  - directory: proto
+plugins:
+  - remote: buf.build/protocolbuffers/go
+    out: gen/proto
+    opt: paths=source_relative
+    include_imports: false
+  - remote: buf.build/connectrpc/go
+    out: gen/proto
+    opt: paths=source_relative
+  - local: protoc-gen-go-protobox
+    out: gen/proto
+    opt: paths=source_relative

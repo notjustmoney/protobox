@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package rpc.example.v1;
+
+option go_package = "github.com/notjustmoney/event-dispatching/examples/event-dispatching/proto/rpc/example/v1;examplerpcv1";
+
+import "google/protobuf/timestamp.proto";
+
+message CreateExampleRequest {
+    string name = 1;
+    string description = 2;
+}
+
+message CreateExampleResponse {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    google.protobuf.Timestamp created_at = 4;
+}
