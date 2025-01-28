@@ -19,17 +19,12 @@ package outboxsql
 import (
 	"context"
 
-	sq "github.com/Masterminds/squirrel"
 	"github.com/notjustmoney/protobox/outbox"
+
+	sq "github.com/Masterminds/squirrel"
 )
 
-type PollerFunc func(ctx context.Context, cfg outbox.PollConfig) ([]outbox.Message, error)
-
-func (f PollerFunc) Poll(ctx context.Context, cfg outbox.PollConfig) ([]outbox.Message, error) {
-	return f(ctx, cfg)
-}
-
-func Poller(dbCtx *dbCtx, cfg Config) PollerFunc {
+func Poller(dbCtx *dbCtx, cfg Config) outbox.PollerFunc {
 	return func(ctx context.Context, pollCfg outbox.PollConfig) ([]outbox.Message, error) {
 		rows, err := sq.
 			Select("id", "topic", "payload").

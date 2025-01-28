@@ -27,16 +27,10 @@ import (
 	"github.com/notjustmoney/protobox/outbox"
 )
 
-type MarkerFunc func(ctx context.Context, messages []outbox.PublishedMessage) (int, error)
-
-func (f MarkerFunc) Mark(ctx context.Context, messages []outbox.PublishedMessage) (int, error) {
-	return f(ctx, messages)
-}
-
 func Marker(
 	dbCtx *dbCtx,
 	cfg Config,
-) MarkerFunc {
+) outbox.MarkerFunc {
 	return func(ctx context.Context, messages []outbox.PublishedMessage) (int, error) {
 		args := make([]interface{}, 0, len(messages)*3)
 		for i := 0; i < len(messages); i++ {
