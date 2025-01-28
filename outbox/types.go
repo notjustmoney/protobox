@@ -48,6 +48,12 @@ type Poller interface {
 	Poll(ctx context.Context, cfg PollConfig) ([]Message, error)
 }
 
+type PollerFunc func(ctx context.Context, cfg PollConfig) ([]Message, error)
+
+func (f PollerFunc) Poll(ctx context.Context, cfg PollConfig) ([]Message, error) {
+	return f(ctx, cfg)
+}
+
 type PublishedMessage struct {
 	ID          string
 	Error       *string
@@ -56,4 +62,10 @@ type PublishedMessage struct {
 
 type Marker interface {
 	Mark(ctx context.Context, messages []PublishedMessage) (int, error)
+}
+
+type MarkerFunc func(ctx context.Context, messages []PublishedMessage) (int, error)
+
+func (f MarkerFunc) Mark(ctx context.Context, messages []PublishedMessage) (int, error) {
+	return f(ctx, messages)
 }
