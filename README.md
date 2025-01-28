@@ -7,7 +7,9 @@
 
 > For reliable delivery of In-process or Interprocess messages.
 
-<img width="40%" align="right" src="./logo/protobox-gopher.png" style="display: block; margin: 60px 30px 30px 30px;" alt="protobox-gopher">
+<div style="width: 40%; float: right; margin: 60px 30px 30px 30px;">
+    <img src="./logo/protobox-gopher.png" alt="protobox-gopher" style="width: 100%;">
+</div>
 
 Protobox is a reliable message delivery framework for Go, providing both in-process and network message delivery capabilities with type safety and transaction support.
 
