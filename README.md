@@ -12,10 +12,16 @@ Protobox is a reliable message delivery framework for Go, providing both in-proc
 
 
 # Overview
-<p>
-<img src="./logo/protobox-gopher.png" style="width: 25%; float: right; margin: 0 0 10px 20px;" alt="protobox-gopher">
-Protobox leverages Protocol Buffers (protobuf) to define message schemas and dispatchers through custom message options. Using Protobox's protoc-gen-go-protobox plugin alongside protobuf's protoc-gen-go plugin, you can generate type-safe message dispatchers and message structures with minimal boilerplate.
-</p>
+<div>
+  <div align="right">
+    <img width="25%" src="./logo/protobox-gopher.png" alt="protobox-gopher">
+  </div>
+  <div>
+    <p>
+    Protobox leverages Protocol Buffers (protobuf) to define message schemas and dispatchers through custom message options. Using Protobox's protoc-gen-go-protobox plugin alongside protobuf's protoc-gen-go plugin, you can generate type-safe message dispatchers and message structures with minimal boilerplate.
+    </p>
+  </div>
+</div>
 
 Key capabilities:
 
