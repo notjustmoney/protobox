@@ -7,9 +7,10 @@
 
 > For reliable delivery of In-process or Interprocess messages.
 
+<img width="40%" align="right" src="./logo/protobox-gopher.png" style="display: block; margin: 60px 30px 30px 30px;" alt="protobox-gopher">
+
 Protobox is a reliable message delivery framework for Go, providing both in-process and network message delivery capabilities with type safety and transaction support.
 
-<img width="40%" align="right" src="./logo/protobox-gopher.png" style="display: block; margin: 60px 30px 30px 30px;" alt="protobox-gopher">
 
 
 # Overview
@@ -21,6 +22,7 @@ In-memory message bus functionality
 Transactional message delivery using outbox pattern
 Idempotent message processing with inbox pattern
 Built-in support for both in-process and network message delivery
+
 
 # Background
 Modern distributed systems often require reliable message delivery mechanisms across various components, both within the same process and across network boundaries. While patterns like outbox and retry mechanisms are well-established solutions, implementing them repeatedly brings several challenges:
