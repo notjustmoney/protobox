@@ -54,17 +54,17 @@ func (h *RelayHandler) Handle(ctx context.Context, cfg RelayConfig) (int, error)
 	if batchSize <= 0 {
 		batchSize = 100
 	}
-	messages, err := h.poller.Poll(ctx, PollConfig{
+	records, err := h.poller.Poll(ctx, PollConfig{
 		BatchSize: cfg.BatchSize,
 	})
 	if err != nil {
 		fmt.Errorf("outbox: %w", err)
 	}
-	queue := collections.NewConcurrentQueue[PublishedMessage]()
+	queue := collections.NewConcurrentQueue[PublishedRecord]()
 	g, _ := errgroup.WithContext(ctx)
-	for _, message := range messages {
+	for _, record := range records {
 		g.Go(func() error {
-			h.publish(ctx, &message, queue)
+			h.publish(ctx, &record, queue)
 			return nil
 		})
 	}
@@ -84,19 +84,19 @@ func (h *RelayHandler) Handle(ctx context.Context, cfg RelayConfig) (int, error)
 	return processed, nil
 }
 
-func (h *RelayHandler) publish(ctx context.Context, message *Message, queue *collections.ConcurrentQueue[PublishedMessage]) {
-	err := h.publisher.Publish(ctx, message)
+func (h *RelayHandler) publish(ctx context.Context, record *Record, queue *collections.ConcurrentQueue[PublishedRecord]) {
+	err := h.publisher.Publish(ctx, record)
 	if err != nil {
-		queue.Enqueue(PublishedMessage{
-			ID:          message.ID,
+		queue.Enqueue(PublishedRecord{
+			ID:          record.ID,
 			ProcessedAt: time.Now(),
 			Error: lo.TernaryF(err != nil, func() *string {
 				return lo.ToPtr(err.Error())
 			}, nil),
 		})
 	}
-	queue.Enqueue(PublishedMessage{
-		ID:          message.ID,
+	queue.Enqueue(PublishedRecord{
+		ID:          record.ID,
 		ProcessedAt: time.Now(),
 		Error:       nil,
 	})

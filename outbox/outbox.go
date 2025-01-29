@@ -25,7 +25,7 @@ import (
 )
 
 type Outbox interface {
-	Insert(ctx context.Context, message []Message) error
+	Insert(ctx context.Context, records []Record) error
 }
 
 func Insert[T interface {
@@ -34,13 +34,13 @@ func Insert[T interface {
 	if len(messages) == 0 {
 		return nil
 	}
-	var outboxMessages []Message
+	var outboxRecords []Record
 	for _, message := range messages {
 		payload, err := json.Marshal(message)
 		if err != nil {
 			return err
 		}
-		outboxMessages = append(outboxMessages, Message{
+		outboxRecords = append(outboxRecords, Record{
 			ID:          uuid.NewString(),
 			Topic:       message.Topic(),
 			Payload:     payload,
@@ -50,5 +50,5 @@ func Insert[T interface {
 		})
 	}
 
-	return outbox.Insert(ctx, outboxMessages)
+	return outbox.Insert(ctx, outboxRecords)
 }

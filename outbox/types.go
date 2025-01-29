@@ -21,7 +21,7 @@ import (
 	"time"
 )
 
-type Message struct {
+type Record struct {
 	ID          string
 	Topic       string
 	Payload     []byte
@@ -31,13 +31,13 @@ type Message struct {
 }
 
 type Publisher interface {
-	Publish(ctx context.Context, message *Message) error
+	Publish(ctx context.Context, record *Record) error
 }
 
-type PublisherFunc func(ctx context.Context, message Message) error
+type PublisherFunc func(ctx context.Context, record Record) error
 
-func (f PublisherFunc) Publish(ctx context.Context, message Message) error {
-	return f(ctx, message)
+func (f PublisherFunc) Publish(ctx context.Context, record Record) error {
+	return f(ctx, record)
 }
 
 type PollConfig struct {
@@ -45,27 +45,27 @@ type PollConfig struct {
 }
 
 type Poller interface {
-	Poll(ctx context.Context, cfg PollConfig) ([]Message, error)
+	Poll(ctx context.Context, cfg PollConfig) ([]Record, error)
 }
 
-type PollerFunc func(ctx context.Context, cfg PollConfig) ([]Message, error)
+type PollerFunc func(ctx context.Context, cfg PollConfig) ([]Record, error)
 
-func (f PollerFunc) Poll(ctx context.Context, cfg PollConfig) ([]Message, error) {
+func (f PollerFunc) Poll(ctx context.Context, cfg PollConfig) ([]Record, error) {
 	return f(ctx, cfg)
 }
 
-type PublishedMessage struct {
+type PublishedRecord struct {
 	ID          string
 	Error       *string
 	ProcessedAt time.Time
 }
 
 type Marker interface {
-	Mark(ctx context.Context, messages []PublishedMessage) (int, error)
+	Mark(ctx context.Context, records []PublishedRecord) (int, error)
 }
 
-type MarkerFunc func(ctx context.Context, messages []PublishedMessage) (int, error)
+type MarkerFunc func(ctx context.Context, records []PublishedRecord) (int, error)
 
-func (f MarkerFunc) Mark(ctx context.Context, messages []PublishedMessage) (int, error) {
-	return f(ctx, messages)
+func (f MarkerFunc) Mark(ctx context.Context, records []PublishedRecord) (int, error) {
+	return f(ctx, records)
 }
