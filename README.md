@@ -13,7 +13,7 @@ safety and transaction support.
 
 # Overview
 
-<img align="right" width="40%" src="./logo/protobox-gopher.png" alt="protobox-gopher">
+<img align="right" width="40%" src="./asset/logo/protobox-gopher.png" alt="protobox-gopher">
 
 Protobox leverages Protocol Buffers (protobuf) to define message schemas and dispatchers through custom message options. Using Protobox's protoc-gen-go-protobox plugin alongside protobuf's protoc-gen-go plugin, you can generate type-safe message dispatchers and message structures with minimal boilerplate.
 
